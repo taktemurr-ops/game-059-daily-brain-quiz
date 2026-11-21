@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../app/game_api.dart';
+import 'package:studio_core/app/game_api.dart';
 
 /// Shared widgets for the word & quiz games.
 bool isTr(PlayContext ctx) => ctx.lang == 'tr';

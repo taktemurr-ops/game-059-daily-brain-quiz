@@ -1,4 +1,4 @@
-import '../core/rng.dart';
+import 'package:studio_core/core/rng.dart';
 import 'word_data.dart';
 
 /// A word from the categorized bank (used for themes, clues and hints).
