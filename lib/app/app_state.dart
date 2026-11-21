@@ -63,7 +63,7 @@ class AppState extends ChangeNotifier {
       ..sound = save.sound
       ..music = save.music
       ..haptics = save.haptics;
-    analytics.enabled = save.analyticsConsent && !session.emergency.analyticsDisabled;
+    analytics.enabled = save.analyticsConsent && !config.kidsMode && !session.emergency.analyticsDisabled;
     unawaited(audio.init().then((_) => audio.startMusic()));
     unawaited(purchases.init(onPurchase));
     if (!needsOnboarding) unawaited(_initAds());
@@ -73,7 +73,10 @@ class AppState extends ChangeNotifier {
 
   Future<void> _initAds() async {
     if (session.emergency.adsDisabled || errors.safeMode) return;
-    await ads.init(underAge: save.underAge, personalized: save.adConsent == 'granted');
+    await ads.init(
+        underAge: save.underAge || config.kidsMode,
+        personalized: save.adConsent == 'granted' && !config.kidsMode,
+        child: config.kidsMode);
   }
 
   // ---- Persistence -------------------------------------------------------
@@ -96,7 +99,7 @@ class AppState extends ChangeNotifier {
   Future<void> completeOnboarding({required int birthYear, required bool acceptAll}) async {
     final age = DateTime.now().year - birthYear;
     save.ageGateDone = true;
-    save.underAge = age < 16;
+    save.underAge = config.kidsMode || age < 16;
     save.adConsent = acceptAll && !save.underAge ? 'granted' : 'denied';
     save.analyticsConsent = acceptAll && !save.underAge;
     analytics.enabled = save.analyticsConsent;

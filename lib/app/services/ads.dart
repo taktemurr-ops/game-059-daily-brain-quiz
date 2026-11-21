@@ -8,7 +8,7 @@ abstract class AdsService {
 
   /// Runs the platform consent flow (GDPR/UMP). Returns true when ads may
   /// be requested.
-  Future<bool> init({required bool underAge, required bool personalized});
+  Future<bool> init({required bool underAge, required bool personalized, bool child = false});
 
   Future<bool> showInterstitial();
 
@@ -28,7 +28,7 @@ class NoAdsService implements AdsService {
   @override
   int get failures => 0;
   @override
-  Future<bool> init({required bool underAge, required bool personalized}) async => false;
+  Future<bool> init({required bool underAge, required bool personalized, bool child = false}) async => false;
   @override
   Future<bool> showInterstitial() async => false;
   @override

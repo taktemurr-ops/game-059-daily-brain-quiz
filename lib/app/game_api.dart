@@ -37,6 +37,9 @@ class PlayContext {
 
   final void Function(Sfx s) sfx;
 
+  /// Plays a named extra sound asset (piano notes, animal calls ...).
+  final void Function(String name) sound;
+
   const PlayContext({
     required this.spec,
     required this.generated,
@@ -54,7 +57,10 @@ class PlayContext {
     required this.requestBooster,
     required this.requestContinue,
     required this.sfx,
+    this.sound = _noSound,
   });
+
+  static void _noSound(String name) {}
 
   String symbol(int i) => const ['●', '■', '▲', '◆', '★', '✚', '♥', '⬟', '✱', '☾'][i % 10];
 }
@@ -78,6 +84,10 @@ class GameConfig {
   final Map<String, List<String>> strings;
   final String privacyUrl;
 
+  /// Designed-for-families title: every player is treated as a child
+  /// (child-directed ads, no analytics), purchases sit behind a parental gate.
+  final bool kidsMode;
+
   const GameConfig({
     required this.gameId,
     required this.title,
@@ -89,6 +99,7 @@ class GameConfig {
     required this.tutorial,
     this.strings = const {},
     this.privacyUrl = '',
+    this.kidsMode = false,
   });
 
   String localized(List<String> l, String lang) {

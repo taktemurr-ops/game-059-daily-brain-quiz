@@ -52,6 +52,29 @@ class AudioService {
     } catch (_) {}
   }
 
+  final Map<String, AudioPlayer> _named = {};
+
+  /// Plays an extra generated asset (assets/sfx/<name>.wav), e.g. piano notes
+  /// or animal calls in the kids titles. Players are created on first use.
+  Future<void> playNamed(String name) async {
+    if (!sound || _failed) return;
+    try {
+      var p = _named[name];
+      if (p == null) {
+        if (_named.length > 40) {
+          final old = _named.remove(_named.keys.first);
+          await old?.dispose();
+        }
+        p = AudioPlayer();
+        await p.setReleaseMode(ReleaseMode.stop);
+        await p.setSource(AssetSource('sfx/$name.wav'));
+        _named[name] = p;
+      }
+      await p.stop();
+      await p.resume();
+    } catch (_) {}
+  }
+
   Future<void> startMusic() async {
     if (!music || _failed) return;
     try {

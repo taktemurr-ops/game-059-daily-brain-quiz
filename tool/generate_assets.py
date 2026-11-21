@@ -756,6 +756,395 @@ def m_picture(d, cx, cy, S, rnd):
         _letter(d, cx - s * 1.6 + i * s * 1.1, cy + S * 0.2, s, ch)
 
 
+def _blob(d, cx, cy, r, col):
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=col)
+
+
+def m_kids_learn(d, cx, cy, S, rnd):
+    for i, col in enumerate(PALETTE[:4]):
+        x, y = cx + (i % 2 - .5) * S * .42, cy + (i // 2 - .5) * S * .42
+        if i == 0:
+            _blob(d, x, y, S * .17, col)
+        elif i == 1:
+            d.rectangle((x - S * .16, y - S * .16, x + S * .16, y + S * .16), fill=col)
+        elif i == 2:
+            d.polygon([(x, y - S * .18), (x + S * .18, y + S * .15), (x - S * .18, y + S * .15)], fill=col)
+        else:
+            _star(d, x, y, S * .19, col)
+
+
+def _star(d, x, y, r, col):
+    pts = []
+    for k in range(10):
+        a = -math.pi / 2 + k * math.pi / 5
+        rr_ = r if k % 2 == 0 else r * .45
+        pts.append((x + rr_ * math.cos(a), y + rr_ * math.sin(a)))
+    d.polygon(pts, fill=col)
+
+
+def m_kids_piano(d, cx, cy, S, rnd):
+    w = S * .12
+    for i in range(7):
+        x = cx - 3.5 * w + i * w
+        d.rectangle((x, cy - S * .3, x + w - 4, cy + S * .3), fill="#FFFFFF", outline="#333333", width=3)
+    for i in (0, 1, 3, 4, 5):
+        x = cx - 3.5 * w + (i + 1) * w - w * .3
+        d.rectangle((x, cy - S * .3, x + w * .6, cy + S * .05), fill="#222222")
+    for i in range(3):
+        _blob(d, cx - S * .25 + i * S * .25, cy - S * .42, S * .05, PALETTE[i])
+
+
+def m_kids_animals(d, cx, cy, S, rnd):
+    _blob(d, cx, cy + S * .05, S * .3, "#FFFFFF")
+    for dx, col in ((-.2, "#333333"), (.2, "#333333")):
+        _blob(d, cx + S * dx, cy - S * .22, S * .1, col)
+    _blob(d, cx - S * .1, cy, S * .05, "#222222")
+    _blob(d, cx + S * .1, cy, S * .05, "#222222")
+    d.ellipse((cx - S * .14, cy + S * .1, cx + S * .14, cy + S * .26), fill="#F4A6B7")
+    for k in range(3):
+        d.arc((cx + S * (.3 + k * .05), cy - S * (.2 + k * .06), cx + S * (.42 + k * .07), cy + S * (.0 + k * .06)), -60, 60, fill=ACCENT, width=6)
+
+
+def m_kids_coloring(d, cx, cy, S, rnd):
+    d.rounded_rectangle((cx - S * .4, cy - S * .35, cx + S * .25, cy + S * .4), radius=int(S * .04), fill="#FFFFFF")
+    _blob(d, cx - S * .1, cy, S * .14, PALETTE[1])
+    d.polygon([(cx + S * .05, cy - S * .5), (cx + S * .42, cy + S * .25), (cx + S * .32, cy + S * .3)], fill=ACCENT)
+    d.polygon([(cx + S * .42, cy + S * .25), (cx + S * .32, cy + S * .3), (cx + S * .45, cy + S * .38)], fill="#333333")
+
+
+def m_kids_math(d, cx, cy, S, rnd):
+    f = font(int(S * .34))
+    for i, (t, col) in enumerate((("1", PALETTE[0]), ("+", "#FFFFFF"), ("2", PALETTE[1]))):
+        x = cx - S * .32 + i * S * .3
+        tw = d.textlength(t, font=f)
+        d.text((x - tw / 2, cy - S * .25), t, font=f, fill=col)
+    for i in range(3):
+        _blob(d, cx - S * .2 + i * S * .2, cy + S * .3, S * .07, ACCENT)
+
+
+def m_kids_shapes(d, cx, cy, S, rnd):
+    d.polygon([(cx - S * .25, cy - S * .3), (cx - S * .05, cy + S * .05), (cx - S * .45, cy + S * .05)], fill=PALETTE[2])
+    _blob(d, cx + S * .22, cy - S * .15, S * .15, PALETTE[3])
+    d.rectangle((cx - S * .35, cy + S * .15, cx - S * .05, cy + S * .42), fill=PALETTE[1])
+    _star(d, cx + S * .22, cy + S * .28, S * .17, PALETTE[0])
+
+
+def m_kids_memory(d, cx, cy, S, rnd):
+    for i in range(4):
+        x, y = cx + (i % 2 - .5) * S * .42, cy + (i // 2 - .5) * S * .5
+        rr(d, (x - S * .17, y - S * .22, x + S * .17, y + S * .22), int(S * .04), "#FFFFFF" if i in (0, 3) else ACCENT)
+        if i in (0, 3):
+            _star(d, x, y, S * .1, PALETTE[0])
+
+
+def m_kids_abc(d, cx, cy, S, rnd):
+    s = S * .26
+    for i, ch in enumerate("ABC"):
+        _letter(d, cx - s * 1.6 + i * s * 1.1, cy - s / 2, s, ch, PALETTE[i])
+
+
+def m_kids_puzzle(d, cx, cy, S, rnd):
+    for i in range(4):
+        x, y = cx + (i % 2 - .5) * S * .4 + (6 if i == 3 else 0), cy + (i // 2 - .5) * S * .4 + (8 if i == 3 else 0)
+        rr(d, (x - S * .19, y - S * .19, x + S * .19, y + S * .19), int(S * .03), PALETTE[i])
+        _blob(d, x + S * .19, y, S * .05, PALETTE[i])
+
+
+def m_kids_mini(d, cx, cy, S, rnd):
+    for i in range(5):
+        x, y = cx + (i - 2) * S * .18, cy - S * .05 + (i % 2) * S * .12
+        d.ellipse((x - S * .09, y - S * .12, x + S * .09, y + S * .12), fill=PALETTE[i])
+        d.line((x, y + S * .12, x, y + S * .38), fill="#FFFFFF", width=3)
+
+
+def _stickman(d, cx, cy, S, col, kick=False):
+    w = max(3, int(S * 0.05))
+    hip = (cx, cy + S * 0.08)
+    neck = (cx + S * 0.03, cy - S * 0.17)
+    d.line([hip, neck], fill=col, width=w)
+    d.line([hip, (cx - S * 0.12, cy + S * 0.36)], fill=col, width=w)
+    d.line([hip, (cx + S * 0.34, cy - S * 0.02) if kick else (cx + S * 0.12, cy + S * 0.36)], fill=col, width=w)
+    d.line([(neck[0], neck[1] + S * 0.04), (cx + S * 0.3, cy - S * 0.16)], fill=col, width=w)
+    d.line([(neck[0], neck[1] + S * 0.04), (cx - S * 0.16, cy + S * 0.02)], fill=col, width=w)
+    r = S * 0.08
+    d.ellipse((neck[0] - r, neck[1] - 2.2 * r, neck[0] + r, neck[1] - 0.2 * r), fill=col)
+    return neck, r
+
+
+def m_zombie(d, cx, cy, S, rnd):
+    r = S * 0.24
+    for sx in (-1, 1):
+        d.line([(cx + sx * r * 0.6, cy + r * 0.2), (cx + sx * r * 0.6, cy - r * 1.6)], fill="#74C69D", width=int(S * 0.07))
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill="#74C69D")
+    for sx in (-1, 1):
+        d.ellipse((cx + sx * r * 0.4 - r * 0.15, cy - r * 0.3 - r * 0.15, cx + sx * r * 0.4 + r * 0.15, cy - r * 0.3 + r * 0.15), fill="#D00000")
+    d.rectangle((cx - r * 0.4, cy + r * 0.3, cx + r * 0.4, cy + r * 0.45), fill="#1B4332")
+
+
+def m_stickman(d, cx, cy, S, rnd):
+    _stickman(d, cx - S * 0.12, cy, S * 0.9, "#FFFFFF", kick=True)
+    _stickman(d, cx + S * 0.28, cy + S * 0.04, S * 0.7, PALETTE[0])
+
+
+def m_ninja(d, cx, cy, S, rnd):
+    neck, r = _stickman(d, cx, cy, S, "#1B263B")
+    d.rectangle((neck[0] - r, neck[1] - 1.4 * r, neck[0] + r, neck[1] - 1.0 * r), fill="#E63946")
+    d.line([(neck[0] - r, neck[1] - 1.2 * r), (neck[0] - 2.6 * r, neck[1] - 0.6 * r)], fill="#E63946", width=int(S * 0.03))
+    for i in range(3):
+        x = cx - S * 0.36 + i * S * 0.08
+        d.line([(x, cy + S * 0.4), (x + S * 0.05, cy + S * 0.4)], fill="white", width=4)
+
+
+def m_dungeon(d, cx, cy, S, rnd):
+    d.rectangle((cx - S * 0.36, cy - S * 0.36, cx + S * 0.36, cy + S * 0.36), fill="#3A3335")
+    d.line([(cx - S * 0.2, cy + S * 0.25), (cx + S * 0.22, cy - S * 0.25)], fill="#E0E1DD", width=int(S * 0.06))
+    d.line([(cx - S * 0.12, cy + S * 0.08), (cx - S * 0.0, cy + S * 0.2)], fill="#B08968", width=int(S * 0.06))
+    d.ellipse((cx + S * 0.05, cy + S * 0.05, cx + S * 0.33, cy + S * 0.3), fill="#52B788")
+
+
+def m_alien_defense(d, cx, cy, S, rnd):
+    d.pieslice((cx - S * 0.36, cy + S * 0.1, cx + S * 0.36, cy + S * 0.6), 180, 360, fill="#9D4EDD")
+    d.line([(cx, cy + S * 0.25), (cx + S * 0.1, cy - S * 0.05)], fill="#E0E1DD", width=int(S * 0.06))
+    for i, (x, y) in enumerate(((-0.25, -0.3), (0.1, -0.38), (0.3, -0.2))):
+        X, Y, r = cx + x * S, cy + y * S, S * 0.08
+        d.polygon([(X, Y + r), (X + r, Y - r * 0.5), (X, Y - r), (X - r, Y - r * 0.5)], fill=PALETTE[(i + 4) % 8])
+
+
+def m_robot(d, cx, cy, S, rnd):
+    r = S * 0.26
+    d.rounded_rectangle((cx - r, cy - r, cx + r, cy + r), radius=int(r * 0.3), fill="#ADB5BD")
+    d.rectangle((cx - r * 0.65, cy - r * 0.45, cx + r * 0.65, cy - r * 0.05), fill="#0D1B2A")
+    d.ellipse((cx - r * 0.15, cy - r * 0.38, cx + r * 0.15, cy - r * 0.12), fill="#00F5D4")
+    d.line([(cx, cy - r), (cx, cy - r * 1.5)], fill="#ADB5BD", width=int(S * 0.03))
+    d.ellipse((cx - r * 0.12, cy - r * 1.7, cx + r * 0.12, cy - r * 1.45), fill="#E63946")
+
+
+def m_shadow(d, cx, cy, S, rnd):
+    d.ellipse((cx - S * 0.36, cy - S * 0.36, cx + S * 0.36, cy + S * 0.36), fill="#F1FAEE")
+    _stickman(d, cx, cy + S * 0.02, S * 0.95, "#0D1B2A", kick=True)
+
+
+def m_beast(d, cx, cy, S, rnd):
+    r = S * 0.3
+    d.ellipse((cx - r, cy - r * 0.8, cx + r, cy + r * 0.8), fill="#9D0208")
+    for sx in (-1, 1):
+        d.polygon([(cx + sx * r * 0.5, cy - r * 0.5), (cx + sx * r * 0.95, cy - r * 1.3), (cx + sx * r * 0.2, cy - r * 0.7)], fill="#F1FAEE")
+        d.ellipse((cx + sx * r * 0.35 - r * 0.12, cy - r * 0.2 - r * 0.12, cx + sx * r * 0.35 + r * 0.12, cy - r * 0.2 + r * 0.12), fill="#FFD60A")
+    d.line([(cx - S * 0.38, cy + S * 0.38), (cx + S * 0.1, cy - S * 0.1)], fill="#E0E1DD", width=int(S * 0.05))
+
+
+def m_island(d, cx, cy, S, rnd):
+    d.ellipse((cx - S * 0.4, cy + S * 0.1, cx + S * 0.4, cy + S * 0.4), fill="#F4D58D")
+    d.line([(cx, cy + S * 0.25), (cx + S * 0.05, cy - S * 0.2)], fill="#7F5539", width=int(S * 0.05))
+    for a in range(5):
+        import math as _m
+        ang = -_m.pi / 2 + (a - 2) * 0.6
+        d.line([(cx + S * 0.05, cy - S * 0.2), (cx + S * 0.05 + _m.cos(ang) * S * 0.25, cy - S * 0.2 + _m.sin(ang) * S * 0.25 + S * 0.05)], fill="#2D6A4F", width=int(S * 0.05))
+
+
+def m_spaceship(d, cx, cy, S, rnd):
+    d.polygon([(cx, cy - S * 0.4), (cx + S * 0.3, cy + S * 0.25), (cx, cy + S * 0.12), (cx - S * 0.3, cy + S * 0.25)], fill=ACCENT)
+    d.ellipse((cx - S * 0.07, cy - S * 0.12, cx + S * 0.07, cy + S * 0.02), fill="#90E0EF")
+    d.ellipse((cx - S * 0.06, cy + S * 0.2, cx + S * 0.06, cy + S * 0.42), fill="#FFB703")
+    for i in range(3):
+        d.line([(cx - S * 0.02 + (i - 1) * S * 0.12, cy - S * 0.45 - i * 8), (cx - S * 0.02 + (i - 1) * S * 0.12, cy - S * 0.55 - i * 8)], fill="#FFFF3F", width=5)
+
+
+def _ball_hex(d, cx, cy, r):
+    d.ellipse((cx - r, cy - r, cx + r, cy + r), fill="#FFFFFF", outline="#222222", width=max(2, int(r * 0.06)))
+    import math as _m
+    pts = [(cx + _m.cos(_m.pi / 2 * 3 + k * 2 * _m.pi / 5) * r * 0.35, cy + _m.sin(_m.pi / 2 * 3 + k * 2 * _m.pi / 5) * r * 0.35) for k in range(5)]
+    d.polygon(pts, fill="#222222")
+
+
+def m_football(d, cx, cy, S, rnd):
+    d.rectangle((cx - S * 0.45, cy + S * 0.2, cx + S * 0.45, cy + S * 0.45), fill="#2D6A4F")
+    d.line([(cx - S * 0.35, cy - S * 0.1), (cx - S * 0.35, cy - S * 0.4), (cx + S * 0.35, cy - S * 0.4), (cx + S * 0.35, cy - S * 0.1)], fill="#FFFFFF", width=int(S * 0.04))
+    _ball_hex(d, cx, cy + S * 0.08, S * 0.2)
+
+
+def m_basketball(d, cx, cy, S, rnd):
+    r = S * 0.3
+    d.ellipse((cx - r, cy - r + S * 0.08, cx + r, cy + r + S * 0.08), fill="#F77F00", outline="#3D1E00", width=int(S * 0.025))
+    d.line([(cx - r, cy + S * 0.08), (cx + r, cy + S * 0.08)], fill="#3D1E00", width=int(S * 0.025))
+    d.line([(cx, cy - r + S * 0.08), (cx, cy + r + S * 0.08)], fill="#3D1E00", width=int(S * 0.025))
+    d.line([(cx - S * 0.3, cy - S * 0.32), (cx + S * 0.3, cy - S * 0.32)], fill="#E63946", width=int(S * 0.05))
+
+
+def m_penalty(d, cx, cy, S, rnd):
+    d.rectangle((cx - S * 0.42, cy - S * 0.35, cx + S * 0.42, cy + S * 0.05), outline="#FFFFFF", width=int(S * 0.04))
+    for i in range(1, 6):
+        x = cx - S * 0.42 + i * S * 0.14
+        d.line([(x, cy - S * 0.35), (x, cy + S * 0.05)], fill="#FFFFFF66", width=2)
+    d.ellipse((cx + S * 0.12, cy - S * 0.3, cx + S * 0.3, cy - S * 0.12), fill="#00B4D8")
+    _ball_hex(d, cx - S * 0.1, cy + S * 0.28, S * 0.13)
+
+
+def m_pingpong(d, cx, cy, S, rnd):
+    d.ellipse((cx - S * 0.32, cy - S * 0.38, cx + S * 0.18, cy + S * 0.12), fill="#E63946", outline="#111111", width=int(S * 0.02))
+    d.line([(cx + S * 0.08, cy + S * 0.02), (cx + S * 0.3, cy + S * 0.32)], fill="#8D6E63", width=int(S * 0.07))
+    d.ellipse((cx + S * 0.18, cy - S * 0.36, cx + S * 0.32, cy - S * 0.22), fill="#FFFFFF")
+
+
+def m_golf(d, cx, cy, S, rnd):
+    d.ellipse((cx - S * 0.45, cy + S * 0.15, cx + S * 0.45, cy + S * 0.42), fill="#52B788")
+    d.ellipse((cx - S * 0.06, cy + S * 0.24, cx + S * 0.06, cy + S * 0.3), fill="#081C15")
+    d.line([(cx, cy + S * 0.27), (cx, cy - S * 0.38)], fill="#FFFFFF", width=int(S * 0.025))
+    d.polygon([(cx, cy - S * 0.38), (cx + S * 0.25, cy - S * 0.3), (cx, cy - S * 0.22)], fill="#E63946")
+    d.ellipse((cx - S * 0.3, cy + S * 0.18, cx - S * 0.18, cy + S * 0.3), fill="#FFFFFF")
+
+
+def m_bowling(d, cx, cy, S, rnd):
+    for i, x in enumerate((-0.18, 0.0, 0.18)):
+        px = cx + x * S
+        d.ellipse((px - S * 0.06, cy - S * 0.38, px + S * 0.06, cy - S * 0.24), fill="#FFFFFF")
+        d.ellipse((px - S * 0.08, cy - S * 0.26, px + S * 0.08, cy + S * 0.02), fill="#FFFFFF")
+        d.rectangle((px - S * 0.05, cy - S * 0.26, px + S * 0.05, cy - S * 0.22), fill="#E63946")
+    r = S * 0.2
+    d.ellipse((cx - r, cy + S * 0.05, cx + r, cy + S * 0.05 + 2 * r), fill="#3A0CA3")
+    for ox, oy in ((-0.05, 0.12), (0.04, 0.1), (0.0, 0.18)):
+        d.ellipse((cx + ox * S - 5, cy + oy * S - 5, cx + ox * S + 5, cy + oy * S + 5), fill="#000000")
+
+
+def m_archery(d, cx, cy, S, rnd):
+    cols = ["#FFFFFF", "#222222", "#0077B6", "#E63946", "#FFD60A"]
+    for i, c in enumerate(cols):
+        r = S * 0.4 * (5 - i) / 5
+        d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=c)
+    d.line([(cx + S * 0.02, cy - S * 0.02), (cx + S * 0.42, cy - S * 0.42)], fill="#7F5539", width=int(S * 0.03))
+    d.polygon([(cx + S * 0.36, cy - S * 0.46), (cx + S * 0.46, cy - S * 0.46), (cx + S * 0.46, cy - S * 0.36)], fill="#E63946")
+
+
+def m_billiards(d, cx, cy, S, rnd):
+    d.rounded_rectangle((cx - S * 0.45, cy - S * 0.3, cx + S * 0.45, cy + S * 0.3), radius=int(S * 0.08), fill="#2E7D32", outline="#5C3A21", width=int(S * 0.05))
+    cols = ["#FFD60A", "#1D4ED8", "#E63946", "#111111", "#F77F00", "#7B2CBF"]
+    k = 0
+    for row in range(3):
+        for j in range(row + 1):
+            x = cx + S * 0.15 + row * S * 0.09
+            y = cy + (j - row / 2) * S * 0.1
+            d.ellipse((x - S * 0.05, y - S * 0.05, x + S * 0.05, y + S * 0.05), fill=cols[k % 6])
+            k += 1
+    d.ellipse((cx - S * 0.28, cy - S * 0.05, cx - S * 0.18, cy + S * 0.05), fill="#FFFFFF")
+
+
+def m_darts(d, cx, cy, S, rnd):
+    import math as _m
+    r = S * 0.4
+    d.ellipse((cx - r - 8, cy - r - 8, cx + r + 8, cy + r + 8), fill="#111111")
+    for i in range(20):
+        a0 = i * 18 - 99
+        d.pieslice((cx - r, cy - r, cx + r, cy + r), a0, a0 + 18, fill="#F1E3C6" if i % 2 else "#1B1B1B")
+    d.ellipse((cx - r * 0.62, cy - r * 0.62, cx + r * 0.62, cy + r * 0.62), outline="#D62828", width=int(S * 0.03))
+    d.ellipse((cx - r * 0.1, cy - r * 0.1, cx + r * 0.1, cy + r * 0.1), fill="#D62828")
+    d.line([(cx + S * 0.03, cy - S * 0.03), (cx + S * 0.3, cy - S * 0.3)], fill="#0077B6", width=int(S * 0.04))
+
+
+def m_tennis(d, cx, cy, S, rnd):
+    d.ellipse((cx - S * 0.3, cy - S * 0.42, cx + S * 0.12, cy + S * 0.05), outline="#E63946", width=int(S * 0.05))
+    for i in range(-2, 3):
+        d.line([(cx - S * 0.09 + i * S * 0.06, cy - S * 0.38), (cx - S * 0.09 + i * S * 0.06, cy + S * 0.01)], fill="#FFFFFF", width=2)
+    d.line([(cx + S * 0.05, cy + S * 0.02), (cx + S * 0.25, cy + S * 0.35)], fill="#333333", width=int(S * 0.06))
+    d.ellipse((cx + S * 0.12, cy - S * 0.15, cx + S * 0.34, cy + S * 0.07), fill="#D9ED92", outline="#FFFFFF", width=3)
+
+
+def m_antistress(d, cx, cy, S, rnd):
+    import math as _m
+    for k in range(3):
+        a = k * 2 * _m.pi / 3 - _m.pi / 2
+        ex, ey = cx + _m.cos(a) * S * 0.25, cy + _m.sin(a) * S * 0.25
+        d.line([(cx, cy), (ex, ey)], fill="#6A4C93", width=int(S * 0.14))
+        d.ellipse((ex - S * 0.13, ey - S * 0.13, ex + S * 0.13, ey + S * 0.13), fill=["#FFADAD", "#CAFFBF", "#A0C4FF"][k])
+    d.ellipse((cx - S * 0.1, cy - S * 0.1, cx + S * 0.1, cy + S * 0.1), fill="#FFD6A5")
+
+
+def m_popit(d, cx, cy, S, rnd):
+    cols = ["#FFADAD", "#FFD6A5", "#FDFFB6", "#CAFFBF", "#9BF6FF", "#BDB2FF"]
+    r = S * 0.07
+    for j in range(5):
+        for i in range(5):
+            x = cx + (i - 2) * r * 2.4 + (r * 1.2 if j % 2 else 0) - r * 0.6
+            y = cy + (j - 2) * r * 2.2
+            if (x - cx) ** 2 + (y - cy) ** 2 > (S * 0.42) ** 2:
+                continue
+            d.ellipse((x - r, y - r, x + r, y + r), fill=cols[j % 6], outline="#00000022", width=2)
+
+
+def m_sandart(d, cx, cy, S, rnd):
+    import math as _m
+    cols = ["#E76F51", "#F4A261", "#E9C46A", "#2A9D8F", "#264653"]
+    w, h = S * 0.5, S * 0.7
+    x0, y0 = cx - w / 2, cy - h / 2
+    for k, c in reversed(list(enumerate(cols))):
+        pts = [(x0 + w * i / 10, y0 + h * (1 - (k + 1) / 5) + _m.sin(i * 0.9 + k) * S * 0.03) for i in range(11)]
+        d.polygon(pts + [(x0 + w, y0 + h), (x0, y0 + h)], fill=c)
+    d.rectangle((x0, y0, x0 + w, y0 + h), outline="#8D6E63", width=int(S * 0.03))
+
+
+def m_cleaning(d, cx, cy, S, rnd):
+    d.ellipse((cx - S * 0.38, cy - S * 0.38, cx + S * 0.38, cy + S * 0.38), fill="#F8F9FA", outline="#ADB5BD", width=6)
+    d.ellipse((cx - S * 0.35, cy - S * 0.1, cx + S * 0.05, cy + S * 0.3), fill="#9C664488")
+    d.rounded_rectangle((cx - S * 0.05, cy - S * 0.3, cx + S * 0.33, cy - S * 0.08), radius=int(S * 0.05), fill="#FFD166")
+    for k in range(4):
+        x, y = cx + S * (0.1 + k * 0.07), cy - S * (0.4 + (k % 2) * 0.05)
+        d.ellipse((x - 8, y - 8, x + 8, y + 8), fill="#FFFFFFCC")
+
+
+def m_zengarden(d, cx, cy, S, rnd):
+    d.rectangle((cx - S * 0.42, cy - S * 0.35, cx + S * 0.42, cy + S * 0.35), fill="#F1E3C6")
+    for k in range(9):
+        y = cy - S * 0.3 + k * S * 0.075
+        d.line([(cx - S * 0.4, y), (cx + S * 0.4, y)], fill="#C9B79C", width=3)
+    d.ellipse((cx - S * 0.2, cy - S * 0.12, cx + S * 0.05, cy + S * 0.08), fill="#6C757D")
+    d.ellipse((cx + S * 0.12, cy + S * 0.05, cx + S * 0.28, cy + S * 0.18), fill="#495057")
+
+
+def m_mergefruit(d, cx, cy, S, rnd):
+    d.ellipse((cx - S * 0.32, cy - S * 0.22, cx + S * 0.32, cy + S * 0.4), fill="#2D6A4F")
+    d.ellipse((cx - S * 0.26, cy - S * 0.16, cx + S * 0.26, cy + S * 0.34), fill="#80ED99")
+    d.ellipse((cx - S * 0.2, cy - S * 0.42, cx - S * 0.02, cy - S * 0.24), fill="#D00000")
+    d.ellipse((cx + S * 0.04, cy - S * 0.46, cx + S * 0.26, cy - S * 0.24), fill="#FFB703")
+    for ox in (-0.08, 0.08):
+        d.ellipse((cx + ox * S - 6, cy + S * 0.05 - 6, cx + ox * S + 6, cy + S * 0.05 + 6), fill="#222222")
+
+
+def m_screw(d, cx, cy, S, rnd):
+    d.rounded_rectangle((cx - S * 0.4, cy - S * 0.2, cx + S * 0.3, cy + S * 0.15), radius=int(S * 0.06), fill="#457B9DCC")
+    d.rounded_rectangle((cx - S * 0.25, cy - S * 0.05, cx + S * 0.42, cy + S * 0.3), radius=int(S * 0.06), fill="#E63946CC")
+    for x, y, c in ((-0.3, -0.1, "#FFB703"), (0.2, -0.1, "#2A9D8F"), (0.32, 0.2, "#9D4EDD")):
+        px, py = cx + x * S, cy + y * S
+        d.ellipse((px - S * 0.06, py - S * 0.06, px + S * 0.06, py + S * 0.06), fill=c, outline="#343A40", width=4)
+        d.line([(px - S * 0.03, py - S * 0.03), (px + S * 0.03, py + S * 0.03)], fill="#000000", width=3)
+
+
+def m_goodssort(d, cx, cy, S, rnd):
+    cols = ["#E63946", "#FFB703", "#2A9D8F"]
+    for row in range(2):
+        y = cy - S * 0.2 + row * S * 0.32
+        d.rectangle((cx - S * 0.42, y + S * 0.12, cx + S * 0.42, y + S * 0.16), fill="#7F5539")
+        for k in range(3):
+            x = cx + (k - 1) * S * 0.26
+            c = cols[0] if row == 0 else cols[k]
+            d.rounded_rectangle((x - S * 0.08, y - S * 0.08, x + S * 0.08, y + S * 0.12), radius=8, fill=c)
+
+
+def m_tilematch(d, cx, cy, S, rnd):
+    cols = ["#FF8FAB", "#80ED99", "#FFD60A"]
+    for k, (ox, oy) in enumerate(((-0.18, -0.12), (0.06, -0.2), (-0.04, 0.08))):
+        x, y = cx + ox * S, cy + oy * S
+        d.rounded_rectangle((x - S * 0.14, y - S * 0.16, x + S * 0.14, y + S * 0.16), radius=12, fill="#FFFCF2", outline="#2D6A4F", width=5)
+        d.ellipse((x - S * 0.07, y - S * 0.07, x + S * 0.07, y + S * 0.07), fill=cols[k])
+
+
+def m_hexasort(d, cx, cy, S, rnd):
+    import math as _m
+    cols = ["#E63946", "#FFB703", "#2A9D8F", "#9D4EDD"]
+    for k in range(4):
+        y = cy + S * 0.15 - k * S * 0.08
+        pts = [(cx + _m.cos(a * _m.pi / 3) * S * 0.3, y + _m.sin(a * _m.pi / 3) * S * 0.2) for a in range(6)]
+        d.polygon(pts, fill=cols[k], outline="#00000055")
+
+
 MOTIFS = {
     "blocks": m_blocks, "bottles": m_bottles, "balls": m_balls, "2048": m_2048,
     "sudoku": m_sudoku, "jigsaw": m_jigsaw, "nonogram": m_nonogram,
@@ -771,6 +1160,15 @@ MOTIFS = {
     "house": m_house, "fishing": m_fishing, "delivery": m_delivery, "construction": m_construction, "life": m_life,
     "wordwheel": m_wordwheel, "wordsearch": m_wordsearch, "crossword": m_crossword, "trivia": m_trivia,
     "symbol": m_symbol, "globe": m_globe, "battle": m_battle, "hangman": m_hangman, "brain": m_brain, "picture": m_picture,
+    "kids_learn": m_kids_learn, "kids_piano": m_kids_piano, "kids_animals": m_kids_animals, "kids_coloring": m_kids_coloring,
+    "kids_math": m_kids_math, "kids_shapes": m_kids_shapes, "kids_memory": m_kids_memory, "kids_abc": m_kids_abc,
+    "kids_puzzle": m_kids_puzzle, "kids_mini": m_kids_mini,
+    "zombie": m_zombie, "stickman": m_stickman, "ninja": m_ninja, "dungeon": m_dungeon, "alien_defense": m_alien_defense,
+    "robot": m_robot, "shadow": m_shadow, "beast": m_beast, "island": m_island, "spaceship": m_spaceship,
+    "football": m_football, "basketball": m_basketball, "penalty": m_penalty, "pingpong": m_pingpong, "golf": m_golf,
+    "bowling": m_bowling, "archery": m_archery, "billiards": m_billiards, "darts": m_darts, "tennis": m_tennis,
+    "antistress": m_antistress, "popit": m_popit, "sandart": m_sandart, "cleaning": m_cleaning, "zengarden": m_zengarden,
+    "mergefruit": m_mergefruit, "screw": m_screw, "goodssort": m_goodssort, "tilematch": m_tilematch, "hexasort": m_hexasort,
 }
 
 
@@ -871,6 +1269,64 @@ def save_wav(path, samples):
         w.writeframes(b"".join(struct.pack("<h", int(max(-1, min(1, s)) * 32000)) for s in samples))
 
 
+def sweep(f0, f1, dur, vol=0.4, vib=0.0, vibf=6.0, harm=(1.0,), noise=0.0, att=0.02, rel=0.08, seed=1):
+    rnd = random.Random(seed)
+    n = int(RATE * dur)
+    out, ph = [], 0.0
+    for i in range(n):
+        t = i / RATE
+        k = t / dur
+        f = f0 + (f1 - f0) * k
+        f *= 1 + vib * math.sin(2 * math.pi * vibf * t)
+        ph += 2 * math.pi * f / RATE
+        v = sum(a * math.sin(ph * (j + 1)) for j, a in enumerate(harm)) / sum(harm)
+        if noise:
+            v = v * (1 - noise) + noise * (rnd.random() * 2 - 1)
+        env = min(1.0, t / att) * min(1.0, (dur - t) / rel)
+        out.append(vol * env * v)
+    return out
+
+
+def silence(dur):
+    return [0.0] * int(RATE * dur)
+
+
+NOTES = [("c4", 261.63), ("d4", 293.66), ("e4", 329.63), ("f4", 349.23), ("g4", 392.0), ("a4", 440.0), ("b4", 493.88),
+         ("c5", 523.25), ("d5", 587.33), ("e5", 659.25), ("f5", 698.46), ("g5", 783.99), ("a5", 880.0), ("b5", 987.77), ("c6", 1046.5)]
+
+
+def kid_sounds(out):
+    for name, f in NOTES:
+        n = int(RATE * 1.1)
+        smp = []
+        for i in range(n):
+            t = i / RATE
+            v = (math.sin(2 * math.pi * f * t) + 0.45 * math.sin(4 * math.pi * f * t) * math.exp(-3 * t)
+                 + 0.2 * math.sin(6 * math.pi * f * t) * math.exp(-5 * t))
+            smp.append(0.35 * v * math.exp(-2.6 * t) * min(1.0, i / 60))
+        save_wav(f"{out}/note_{name}.wav", smp)
+    calls = {
+        "cow": sweep(150, 115, 1.1, .45, .03, 5, (1, .8, .6, .4), .05),
+        "dog": seq([sweep(520, 380, .14, .5, 0, 6, (1, .7, .5), .35), silence(.08), sweep(560, 400, .16, .5, 0, 6, (1, .7, .5), .35)]),
+        "cat": sweep(480, 820, .35, .35, .02, 7, (1, .4, .2)) + sweep(820, 520, .35, .35, .02, 7, (1, .4, .2)),
+        "sheep": sweep(330, 300, .9, .4, .12, 9, (1, .7, .5, .3), .05),
+        "duck": seq([sweep(620, 560, .1, .35, 0, 6, (1, .9, .8, .7), .2), silence(.06)] * 3),
+        "bird": seq([sweep(2600, 3600, .07, .25), silence(.04), sweep(3000, 4000, .07, .25), silence(.04), sweep(2800, 3800, .1, .25)]),
+        "lion": sweep(140, 90, 1.2, .5, .06, 18, (1, .8, .6, .4), .55),
+        "horse": sweep(950, 420, .9, .35, .09, 14, (1, .5, .3)),
+        "frog": seq([sweep(210, 180, .07, .45, 0, 6, (1, .8, .6), .3), silence(.05), sweep(260, 200, .12, .45, 0, 6, (1, .8, .6), .3)]),
+        "owl": seq([sweep(360, 340, .3, .35), silence(.12), sweep(380, 330, .5, .35)]),
+        "rooster": seq([sweep(500, 900, .15, .35, 0, 6, (1, .5)), sweep(900, 1100, .45, .35, .05, 10, (1, .5)), sweep(1100, 600, .3, .35, 0, 6, (1, .5))]),
+        "pig": seq([sweep(260, 220, .14, .45, 0, 6, (1, .8, .6), .45), silence(.06), sweep(280, 230, .12, .45, 0, 6, (1, .8, .6), .45)]),
+        "elephant": sweep(420, 700, .8, .45, .05, 8, (1, .8, .7, .6, .5), .1),
+        "monkey": seq([sweep(700, 1200, .1, .35), sweep(1200, 800, .1, .35)] * 3),
+        "bee": sweep(220, 240, 1.0, .25, .05, 30, (1, .9, .8, .7), .1),
+        "snake": sweep(5000, 5000, .9, .2, 0, 6, (1,), .95),
+    }
+    for k, v in calls.items():
+        save_wav(f"{out}/animal_{k}.wav", v)
+
+
 def sounds(out):
     os.makedirs(out, exist_ok=True)
     save_wav(f"{out}/tap.wav", tone([880], 0.06, 0.25, 40))
@@ -888,6 +1344,8 @@ def sounds(out):
     for c in chords:
         music += tone([f / 2 for f in c] + c, 2.0, 0.18, 0.6)
     save_wav(f"{out}/music.wav", music)
+    if MOTIF.startswith("kids"):
+        kid_sounds(out)
 
 
 def main():

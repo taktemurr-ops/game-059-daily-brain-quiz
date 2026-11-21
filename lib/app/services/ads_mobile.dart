@@ -29,7 +29,7 @@ class AdMobService implements AdsService {
   AdRequest get _request => AdRequest(nonPersonalizedAds: !_personalized);
 
   @override
-  Future<bool> init({required bool underAge, required bool personalized}) async {
+  Future<bool> init({required bool underAge, required bool personalized, bool child = false}) async {
     _personalized = personalized && !underAge;
     try {
       // 1) Google UMP consent (shows the GDPR form only where required).
@@ -52,8 +52,9 @@ class AdMobService implements AdsService {
 
       // 2) Child-directed / under-age tagging.
       await MobileAds.instance.updateRequestConfiguration(RequestConfiguration(
-        ageRestrictedTreatment:
-            underAge ? AgeRestrictedTreatment.teen : AgeRestrictedTreatment.unspecified,
+        ageRestrictedTreatment: child
+            ? AgeRestrictedTreatment.child
+            : (underAge ? AgeRestrictedTreatment.teen : AgeRestrictedTreatment.unspecified),
         maxAdContentRating: underAge ? MaxAdContentRating.g : MaxAdContentRating.pg,
       ));
       await MobileAds.instance.initialize();

@@ -142,6 +142,7 @@ class _PlayScreenState extends ConsumerState<PlayScreen> {
       requestBooster: () => _requestBooster(app),
       requestContinue: () => _requestContinue(app),
       sfx: (s) => app.audio.play(s),
+      sound: (n) => app.audio.playNamed(n),
     );
     return KeyedSubtree(key: ValueKey(_roundKey), child: app.config.buildPlay(ctx));
   }

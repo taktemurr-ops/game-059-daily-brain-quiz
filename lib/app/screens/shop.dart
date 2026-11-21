@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../core/monetization.dart';
+import '../adaptive.dart';
 import '../app_state.dart';
+import '../parental_gate.dart';
 import '../widgets.dart';
 
 class ShopScreen extends ConsumerWidget {
@@ -25,7 +27,7 @@ class ShopScreen extends ConsumerWidget {
     final disabled = app.session.emergency.purchasesDisabled;
     return Scaffold(
       appBar: AppBar(title: Text(app.t('shop'))),
-      body: ListView(padding: const EdgeInsets.all(16), children: [
+      body: ContentWidth(child: ListView(padding: const EdgeInsets.all(16), children: [
         CurrencyBar(app: app),
         if (!ps.available || disabled)
           Card(child: ListTile(leading: const Icon(Icons.info_outline), title: Text(app.t('store_unavailable')))),
@@ -38,7 +40,11 @@ class ShopScreen extends ConsumerWidget {
               trailing: app.save.ownedProducts.contains(id) && Products.nonConsumable.contains(id)
                   ? Text(app.t('owned'))
                   : FilledButton(
-                      onPressed: ps.available && !disabled && prices.containsKey(id) ? () => ps.buy(id) : null,
+                      onPressed: ps.available && !disabled && prices.containsKey(id)
+                          ? () async {
+                              if (await parentalGate(context, app)) ps.buy(id);
+                            }
+                          : null,
                       child: Text(prices[id] ?? app.t('buy')),
                     ),
             ),
@@ -47,9 +53,13 @@ class ShopScreen extends ConsumerWidget {
         OutlinedButton.icon(
           icon: const Icon(Icons.restore),
           label: Text(app.t('restore_purchases')),
-          onPressed: ps.available ? () => ps.restore() : null,
+          onPressed: ps.available
+              ? () async {
+                  if (await parentalGate(context, app)) ps.restore();
+                }
+              : null,
         ),
-      ]),
+      ])),
     );
   }
 
