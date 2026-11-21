@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:game_059_daily_brain_quiz/core/level_plan.dart';
-import 'package:game_059_daily_brain_quiz/core/rng.dart';
+import 'package:studio_core/core/level_plan.dart';
+import 'package:studio_core/core/rng.dart';
 import 'package:game_059_daily_brain_quiz/game/quiz_engine.dart';
 import 'package:game_059_daily_brain_quiz/game/rules.dart';
 
